@@ -1,0 +1,604 @@
+1. 求二叉树中的节点个数
+递归解法：
+（1）如果二叉树为空，节点个数为0
+（2）如果二叉树不为空，二叉树节点个数 = 左子树节点个数 + 右子树节点个数 + 1
+参考代码如下：
+[cpp] view plaincopy
+1.	int GetNodeNum(BinaryTreeNode * pRoot)  
+2.	{  
+3.	    if(pRoot == NULL) // 递归出口  
+4.	        return 0;  
+5.	    return GetNodeNum(pRoot->m_pLeft) + GetNodeNum(pRoot->m_pRight) + 1;  
+6.	}  
+2. 求二叉树的深度
+递归解法：
+（1）如果二叉树为空，二叉树的深度为0
+（2）如果二叉树不为空，二叉树的深度 = max(左子树深度， 右子树深度) + 1
+参考代码如下：
+[cpp] view plaincopy
+1.	int GetDepth(BinaryTreeNode * pRoot)  
+2.	{  
+3.	    if(pRoot == NULL) // 递归出口  
+4.	        return 0;  
+5.	    int depthLeft = GetDepth(pRoot->m_pLeft);  
+6.	    int depthRight = GetDepth(pRoot->m_pRight);  
+7.	    return depthLeft > depthRight ? (depthLeft + 1) : (depthRight + 1);   
+8.	}  
+3. 前序遍历，中序遍历，后序遍历
+前序遍历递归解法：
+（1）如果二叉树为空，空操作
+（2）如果二叉树不为空，访问根节点，前序遍历左子树，前序遍历右子树
+参考代码如下：
+[cpp] view plaincopy
+1.	void PreOrderTraverse(BinaryTreeNode * pRoot)  
+2.	{  
+3.	    if(pRoot == NULL)  
+4.	        return;  
+5.	    Visit(pRoot); // 访问根节点  
+6.	    PreOrderTraverse(pRoot->m_pLeft); // 前序遍历左子树  
+7.	    PreOrderTraverse(pRoot->m_pRight); // 前序遍历右子树  
+8.	}  
+中序遍历递归解法
+（1）如果二叉树为空，空操作。
+（2）如果二叉树不为空，中序遍历左子树，访问根节点，中序遍历右子树
+参考代码如下：
+[cpp] view plaincopy
+1.	void InOrderTraverse(BinaryTreeNode * pRoot)  
+2.	{  
+3.	    if(pRoot == NULL)  
+4.	        return;  
+5.	    InOrderTraverse(pRoot->m_pLeft); // 中序遍历左子树  
+6.	    Visit(pRoot); // 访问根节点  
+7.	    InOrderTraverse(pRoot->m_pRight); // 中序遍历右子树  
+8.	}  
+后序遍历递归解法
+（1）如果二叉树为空，空操作
+（2）如果二叉树不为空，后序遍历左子树，后序遍历右子树，访问根节点
+参考代码如下：
+[cpp] view plaincopy
+1.	void PostOrderTraverse(BinaryTreeNode * pRoot)  
+2.	{  
+3.	    if(pRoot == NULL)  
+4.	        return;  
+5.	    PostOrderTraverse(pRoot->m_pLeft); // 后序遍历左子树  
+6.	    PostOrderTraverse(pRoot->m_pRight); // 后序遍历右子树  
+7.	    Visit(pRoot); // 访问根节点  
+8.	}  
+4.分层遍历二叉树（按层次从上往下，从左往右）
+相当于广度优先搜索，使用队列实现。队列初始化，将根节点压入队列。当队列不为空，进行如下操作：弹出一个节点，访问，若左子节点或右子节点不为空，将其压入队列。
+[cpp] view plaincopy
+1.	void LevelTraverse(BinaryTreeNode * pRoot)  
+2.	{  
+3.	    if(pRoot == NULL)  
+4.	        return;  
+5.	    queue<BinaryTreeNode *> q;  
+6.	    q.push(pRoot);  
+7.	    while(!q.empty())  
+8.	    {  
+9.	        BinaryTreeNode * pNode = q.front();  
+10.	        q.pop();  
+11.	        Visit(pNode); // 访问节点  
+12.	        if(pNode->m_pLeft != NULL)  
+13.	            q.push(pNode->m_pLeft);  
+14.	        if(pNode->m_pRight != NULL)  
+15.	            q.push(pNode->m_pRight);  
+16.	    }  
+17.	    return;  
+18.	}  
+5. 将二叉查找树变为有序的双向链表 
+要求不能创建新节点，只调整指针。
+递归解法：
+（1）如果二叉树查找树为空，不需要转换，对应双向链表的第一个节点是NULL，最后一个节点是NULL
+（2）如果二叉查找树不为空：
+如果左子树为空，对应双向有序链表的第一个节点是根节点，左边不需要其他操作；
+如果左子树不为空，转换左子树，二叉查找树对应双向有序链表的第一个节点就是左子树转换后双向有序链表的第一个节点，同时将根节点和左子树转换后的双向有序链 表的最后一个节点连接；
+如果右子树为空，对应双向有序链表的最后一个节点是根节点，右边不需要其他操作；
+如果右子树不为空，对应双向有序链表的最后一个节点就是右子树转换后双向有序链表的最后一个节点，同时将根节点和右子树转换后的双向有序链表的第一个节点连 接。
+参考代码如下：
+[cpp] view plaincopy
+1.	/****************************************************************************** 
+2.	参数： 
+3.	pRoot: 二叉查找树根节点指针 
+4.	pFirstNode: 转换后双向有序链表的第一个节点指针 
+5.	pLastNode: 转换后双向有序链表的最后一个节点指针 
+6.	******************************************************************************/  
+7.	void Convert(BinaryTreeNode * pRoot,   
+8.	             BinaryTreeNode * & pFirstNode, BinaryTreeNode * & pLastNode)  
+9.	{  
+10.	    BinaryTreeNode *pFirstLeft, *pLastLeft, * pFirstRight, *pLastRight;  
+11.	    if(pRoot == NULL)   
+12.	    {  
+13.	        pFirstNode = NULL;  
+14.	        pLastNode = NULL;  
+15.	        return;  
+16.	    }  
+17.	  
+18.	    if(pRoot->m_pLeft == NULL)  
+19.	    {  
+20.	        // 如果左子树为空，对应双向有序链表的第一个节点是根节点  
+21.	        pFirstNode = pRoot;  
+22.	    }  
+23.	    else  
+24.	    {  
+25.	        Convert(pRoot->m_pLeft, pFirstLeft, pLastLeft);  
+26.	        // 二叉查找树对应双向有序链表的第一个节点就是左子树转换后双向有序链表的第一个节点  
+27.	        pFirstNode = pFirstLeft;  
+28.	        // 将根节点和左子树转换后的双向有序链表的最后一个节点连接  
+29.	        pRoot->m_pLeft = pLastLeft;  
+30.	        pLastLeft->m_pRight = pRoot;  
+31.	    }  
+32.	  
+33.	    if(pRoot->m_pRight == NULL)  
+34.	    {  
+35.	        // 对应双向有序链表的最后一个节点是根节点  
+36.	        pLastNode = pRoot;  
+37.	    }  
+38.	    else  
+39.	    {  
+40.	        Convert(pRoot->m_pRight, pFirstRight, pLastRight);  
+41.	        // 对应双向有序链表的最后一个节点就是右子树转换后双向有序链表的最后一个节点  
+42.	        pLastNode = pLastRight;  
+43.	        // 将根节点和右子树转换后的双向有序链表的第一个节点连接  
+44.	        pRoot->m_pRight = pFirstRight;  
+45.	        pFirstRight->m_pLeft = pRoot;  
+46.	    }  
+47.	  
+48.	    return;  
+49.	}  
+6. 求二叉树第K层的节点个数
+递归解法：
+（1）如果二叉树为空或者k<1返回0
+（2）如果二叉树不为空并且k==1，返回1
+（3）如果二叉树不为空且k>1，返回左子树中k-1层的节点个数与右子树k-1层节点个数之和
+参考代码如下：
+[cpp] view plaincopy
+1.	int GetNodeNumKthLevel(BinaryTreeNode * pRoot, int k)  
+2.	{  
+3.	    if(pRoot == NULL || k < 1)  
+4.	        return 0;  
+5.	    if(k == 1)  
+6.	        return 1;  
+7.	    int numLeft = GetNodeNumKthLevel(pRoot->m_pLeft, k-1); // 左子树中k-1层的节点个数  
+8.	    int numRight = GetNodeNumKthLevel(pRoot->m_pRight, k-1); // 右子树中k-1层的节点个数  
+9.	    return (numLeft + numRight);  
+10.	}  
+7. 求二叉树中叶子节点的个数
+递归解法：
+（1）如果二叉树为空，返回0
+（2）如果二叉树不为空且左右子树为空，返回1
+（3）如果二叉树不为空，且左右子树不同时为空，返回左子树中叶子节点个数加上右子树中叶子节点个数
+参考代码如下：
+[cpp] view plaincopy
+1.	int GetLeafNodeNum(BinaryTreeNode * pRoot)  
+2.	{  
+3.	    if(pRoot == NULL)  
+4.	        return 0;  
+5.	    if(pRoot->m_pLeft == NULL && pRoot->m_pRight == NULL)  
+6.	        return 1;  
+7.	    int numLeft = GetLeafNodeNum(pRoot->m_pLeft); // 左子树中叶节点的个数  
+8.	    int numRight = GetLeafNodeNum(pRoot->m_pRight); // 右子树中叶节点的个数  
+9.	    return (numLeft + numRight);  
+10.	}  
+8. 判断两棵二叉树是否结构相同
+不考虑数据内容。结构相同意味着对应的左子树和对应的右子树都结构相同。
+递归解法：
+（1）如果两棵二叉树都为空，返回真
+（2）如果两棵二叉树一棵为空，另一棵不为空，返回假
+（3）如果两棵二叉树都不为空，如果对应的左子树和右子树都同构返回真，其他返回假
+参考代码如下：
+[cpp] view plaincopy
+1.	bool StructureCmp(BinaryTreeNode * pRoot1, BinaryTreeNode * pRoot2)  
+2.	{  
+3.	    if(pRoot1 == NULL && pRoot2 == NULL) // 都为空，返回真  
+4.	        return true;  
+5.	    else if(pRoot1 == NULL || pRoot2 == NULL) // 有一个为空，一个不为空，返回假  
+6.	        return false;  
+7.	    bool resultLeft = StructureCmp(pRoot1->m_pLeft, pRoot2->m_pLeft); // 比较对应左子树   
+8.	    bool resultRight = StructureCmp(pRoot1->m_pRight, pRoot2->m_pRight); // 比较对应右子树  
+9.	    return (resultLeft && resultRight);  
+10.	}   
+9. 判断二叉树是不是平衡二叉树
+递归解法：
+（1）如果二叉树为空，返回真
+（2）如果二叉树不为空，如果左子树和右子树都是AVL树并且左子树和右子树高度相差不大于1，返回真，其他返回假
+参考代码：
+[cpp] view plaincopy
+1.	bool IsAVL(BinaryTreeNode * pRoot, int & height)  
+2.	{  
+3.	    if(pRoot == NULL) // 空树，返回真  
+4.	    {  
+5.	        height = 0;  
+6.	        return true;  
+7.	    }  
+8.	    int heightLeft;  
+9.	    bool resultLeft = IsAVL(pRoot->m_pLeft, heightLeft);  
+10.	    int heightRight;  
+11.	    bool resultRight = IsAVL(pRoot->m_pRight, heightRight);  
+12.	    if(resultLeft && resultRight && abs(heightLeft - heightRight) <= 1) // 左子树和右子树都是AVL，并且高度相差不大于1，返回真  
+13.	    {  
+14.	        height = max(heightLeft, heightRight) + 1;  
+15.	        return true;  
+16.	    }  
+17.	    else  
+18.	    {  
+19.	        height = max(heightLeft, heightRight) + 1;  
+20.	        return false;  
+21.	    }  
+22.	}  
+10. 求二叉树的镜像
+递归解法：
+（1）如果二叉树为空，返回空
+（2）如果二叉树不为空，求左子树和右子树的镜像，然后交换左子树和右子树
+参考代码如下：
+[cpp] view plaincopy
+1.	BinaryTreeNode * Mirror(BinaryTreeNode * pRoot)  
+2.	{  
+3.	    if(pRoot == NULL) // 返回NULL  
+4.	        return NULL;  
+5.	    BinaryTreeNode * pLeft = Mirror(pRoot->m_pLeft); // 求左子树镜像  
+6.	    BinaryTreeNode * pRight = Mirror(pRoot->m_pRight); // 求右子树镜像  
+7.	        // 交换左子树和右子树  
+8.	    pRoot->m_pLeft = pRight;  
+9.	    pRoot->m_pRight = pLeft;  
+10.	    return pRoot;  
+11.	}  
+11. 求二叉树中两个节点的最低公共祖先节点
+递归解法：
+（1）如果两个节点分别在根节点的左子树和右子树，则返回根节点
+（2）如果两个节点都在左子树，则递归处理左子树；如果两个节点都在右子树，则递归处理右子树
+参考代码如下：
+[cpp] view plaincopy
+1.	bool FindNode(BinaryTreeNode * pRoot, BinaryTreeNode * pNode)  
+2.	{  
+3.	    if(pRoot == NULL || pNode == NULL)  
+4.	        return false;  
+5.	  
+6.	    if(pRoot == pNode)  
+7.	        return true;  
+8.	  
+9.	    bool found = FindNode(pRoot->m_pLeft, pNode);  
+10.	    if(!found)  
+11.	        found = FindNode(pRoot->m_pRight, pNode);  
+12.	  
+13.	    return found;  
+14.	}  
+15.	  
+16.	BinaryTreeNode * GetLastCommonParent(BinaryTreeNode * pRoot,   
+17.	                                     BinaryTreeNode * pNode1,   
+18.	                                     BinaryTreeNode * pNode2)  
+19.	{  
+20.	    if(FindNode(pRoot->m_pLeft, pNode1))  
+21.	    {  
+22.	        if(FindNode(pRoot->m_pRight, pNode2))  
+23.	            return pRoot;  
+24.	        else  
+25.	            return GetLastCommonParent(pRoot->m_pLeft, pNode1, pNode2);  
+26.	    }  
+27.	    else  
+28.	    {  
+29.	        if(FindNode(pRoot->m_pLeft, pNode2))  
+30.	            return pRoot;  
+31.	        else  
+32.	            return GetLastCommonParent(pRoot->m_pRight, pNode1, pNode2);  
+33.	    }  
+34.	}  
+递归解法效率很低，有很多重复的遍历，下面看一下非递归解法。
+非递归解法：
+先求从根节点到两个节点的路径，然后再比较对应路径的节点就行，最后一个相同的节点也就是他们在二叉树中的最低公共祖先节点
+参考代码如下：
+[cpp] view plaincopy
+1.	bool GetNodePath(BinaryTreeNode * pRoot, BinaryTreeNode * pNode,   
+2.	                 list<BinaryTreeNode *> & path)  
+3.	{  
+4.	    if(pRoot == pNode)  
+5.	    {     
+6.	        path.push_back(pRoot);  
+7.	        return true;  
+8.	    }  
+9.	    if(pRoot == NULL)  
+10.	        return false;  
+11.	    path.push_back(pRoot);  
+12.	    bool found = false;  
+13.	    found = GetNodePath(pRoot->m_pLeft, pNode, path);  
+14.	    if(!found)  
+15.	        found = GetNodePath(pRoot->m_pRight, pNode, path);  
+16.	    if(!found)  
+17.	        path.pop_back();  
+18.	    return found;  
+19.	}  
+20.	BinaryTreeNode * GetLastCommonParent(BinaryTreeNode * pRoot, BinaryTreeNode * pNode1, BinaryTreeNode * pNode2)  
+21.	{  
+22.	    if(pRoot == NULL || pNode1 == NULL || pNode2 == NULL)  
+23.	        return NULL;  
+24.	    list<BinaryTreeNode*> path1;  
+25.	    bool bResult1 = GetNodePath(pRoot, pNode1, path1);  
+26.	    list<BinaryTreeNode*> path2;  
+27.	    bool bResult2 = GetNodePath(pRoot, pNode2, path2);  
+28.	    if(!bResult1 || !bResult2)   
+29.	        return NULL;  
+30.	    BinaryTreeNode * pLast = NULL;  
+31.	    list<BinaryTreeNode*>::const_iterator iter1 = path1.begin();  
+32.	    list<BinaryTreeNode*>::const_iterator iter2 = path2.begin();  
+33.	    while(iter1 != path1.end() && iter2 != path2.end())  
+34.	    {  
+35.	        if(*iter1 == *iter2)  
+36.	            pLast = *iter1;  
+37.	        else  
+38.	            break;  
+39.	        iter1++;  
+40.	        iter2++;  
+41.	    }  
+42.	    return pLast;  
+43.	}  
+
+在上述算法的基础上稍加变化即可求二叉树中任意两个节点的距离了。
+12. 求二叉树中节点的最大距离
+即二叉树中相距最远的两个节点之间的距离。
+递归解法：
+（1）如果二叉树为空，返回0，同时记录左子树和右子树的深度，都为0
+（2）如果二叉树不为空，最大距离要么是左子树中的最大距离，要么是右子树中的最大距离，要么是左子树节点中到根节点的最大距离+右子树节点中到根节点的最大距离，同时记录左子树和右子树节点中到根节点的最大距离。
+参考代码如下：
+[cpp] view plaincopy
+1.	int GetMaxDistance(BinaryTreeNode * pRoot, int & maxLeft, int & maxRight)  
+2.	{  
+3.	    // maxLeft, 左子树中的节点距离根节点的最远距离  
+4.	    // maxRight, 右子树中的节点距离根节点的最远距离  
+5.	    if(pRoot == NULL)  
+6.	    {  
+7.	        maxLeft = 0;  
+8.	        maxRight = 0;  
+9.	        return 0;  
+10.	    }  
+11.	    int maxLL, maxLR, maxRL, maxRR;  
+12.	    int maxDistLeft, maxDistRight;  
+13.	    if(pRoot->m_pLeft != NULL)  
+14.	    {  
+15.	        maxDistLeft = GetMaxDistance(pRoot->m_pLeft, maxLL, maxLR);  
+16.	        maxLeft = max(maxLL, maxLR) + 1;  
+17.	    }  
+18.	    else  
+19.	    {  
+20.	        maxDistLeft = 0;  
+21.	        maxLeft = 0;  
+22.	    }  
+23.	    if(pRoot->m_pRight != NULL)  
+24.	    {  
+25.	        maxDistRight = GetMaxDistance(pRoot->m_pRight, maxRL, maxRR);  
+26.	        maxRight = max(maxRL, maxRR) + 1;  
+27.	    }  
+28.	    else  
+29.	    {  
+30.	        maxDistRight = 0;  
+31.	        maxRight = 0;  
+32.	    }  
+33.	    return max(max(maxDistLeft, maxDistRight), maxLeft+maxRight);  
+34.	}  
+13. 由前序遍历序列和中序遍历序列重建二叉树
+二叉树前序遍历序列中，第一个元素总是树的根节点的值。中序遍历序列中，左子树的节点的值位于根节点的值的左边，右子树的节点的值位
+于根节点的值的右边。
+递归解法：
+（1）如果前序遍历为空或中序遍历为空或节点个数小于等于0，返回NULL。
+（2）创建根节点。前序遍历的第一个数据就是根节点的数据，在中序遍历中找到根节点的位置，可分别得知左子树和右子树的前序和中序遍
+历序列，重建左右子树。
+[cpp] view plaincopy
+1.	BinaryTreeNode * RebuildBinaryTree(int* pPreOrder, int* pInOrder, int nodeNum)  
+2.	{  
+3.	    if(pPreOrder == NULL || pInOrder == NULL || nodeNum <= 0)  
+4.	        return NULL;  
+5.	    BinaryTreeNode * pRoot = new BinaryTreeNode;  
+6.	    // 前序遍历的第一个数据就是根节点数据  
+7.	    pRoot->m_nValue = pPreOrder[0];  
+8.	    pRoot->m_pLeft = NULL;  
+9.	    pRoot->m_pRight = NULL;  
+10.	    // 查找根节点在中序遍历中的位置，中序遍历中，根节点左边为左子树，右边为右子树  
+11.	    int rootPositionInOrder = -1;  
+12.	    for(int i = 0; i < nodeNum; i++)  
+13.	        if(pInOrder[i] == pRoot->m_nValue)  
+14.	        {  
+15.	            rootPositionInOrder = i;  
+16.	            break;  
+17.	        }  
+18.	    if(rootPositionInOrder == -1)  
+19.	    {  
+20.	        throw std::exception("Invalid input.");  
+21.	    }  
+22.	    // 重建左子树  
+23.	    int nodeNumLeft = rootPositionInOrder;  
+24.	    int * pPreOrderLeft = pPreOrder + 1;  
+25.	    int * pInOrderLeft = pInOrder;  
+26.	    pRoot->m_pLeft = RebuildBinaryTree(pPreOrderLeft, pInOrderLeft, nodeNumLeft);  
+27.	    // 重建右子树  
+28.	    int nodeNumRight = nodeNum - nodeNumLeft - 1;  
+29.	    int * pPreOrderRight = pPreOrder + 1 + nodeNumLeft;  
+30.	    int * pInOrderRight = pInOrder + nodeNumLeft + 1;  
+31.	    pRoot->m_pRight = RebuildBinaryTree(pPreOrderRight, pInOrderRight, nodeNumRight);  
+32.	    return pRoot;  
+33.	}  
+同样，有中序遍历序列和后序遍历序列，类似的方法可重建二叉树，但前序遍历序列和后序遍历序列不同恢复一棵二叉树，证明略。
+14.判断二叉树是不是完全二叉树
+若设二叉树的深度为h，除第 h 层外，其它各层 (1～h-1) 的结点数都达到最大个数，第 h 层所有的结点都连续集中在最左边，这就是完全
+二叉树。
+有如下算法，按层次（从上到下，从左到右）遍历二叉树，当遇到一个节点的左子树为空时，则该节点右子树必须为空，且后面遍历的节点左
+右子树都必须为空，否则不是完全二叉树。
+[cpp] view plaincopy
+1.	bool IsCompleteBinaryTree(BinaryTreeNode * pRoot)  
+2.	{  
+3.	    if(pRoot == NULL)  
+4.	        return false;  
+5.	    queue<BinaryTreeNode *> q;  
+6.	    q.push(pRoot);  
+7.	    bool mustHaveNoChild = false;  
+8.	    bool result = true;  
+9.	    while(!q.empty())  
+10.	    {  
+11.	        BinaryTreeNode * pNode = q.front();  
+12.	        q.pop();  
+13.	        if(mustHaveNoChild) // 已经出现了有空子树的节点了，后面出现的必须为叶节点（左右子树都为空）  
+14.	        {  
+15.	            if(pNode->m_pLeft != NULL || pNode->m_pRight != NULL)  
+16.	            {  
+17.	                result = false;  
+18.	                break;  
+19.	            }  
+20.	        }  
+21.	        else  
+22.	        {  
+23.	            if(pNode->m_pLeft != NULL && pNode->m_pRight != NULL)  
+24.	            {  
+25.	                q.push(pNode->m_pLeft);  
+26.	                q.push(pNode->m_pRight);  
+27.	            }  
+28.	            else if(pNode->m_pLeft != NULL && pNode->m_pRight == NULL)  
+29.	            {  
+30.	                mustHaveNoChild = true;  
+31.	                q.push(pNode->m_pLeft);  
+32.	            }  
+33.	            else if(pNode->m_pLeft == NULL && pNode->m_pRight != NULL)  
+34.	            {  
+35.	                result = false;  
+36.	                break;  
+37.	            }  
+38.	            else  
+39.	            {  
+40.	                mustHaveNoChild = true;  
+41.	            }  
+42.	        }  
+43.	    }  
+44.	    return result;  
+45.	}  
+15. 非递归遍历二叉树
+1.	//中序遍历  
+2.	void InOrderWithoutRecursion1(BTNode* root)  
+3.	{  
+4.	    //空树  
+5.	    if (root == NULL)  
+6.	        return;  
+7.	    //树非空  
+8.	    BTNode* p = root;  
+9.	    stack<BTNode*> s;  
+10.	    while (!s.empty() || p)  
+11.	    {  
+12.	        //一直遍历到左子树最下边，边遍历边保存根节点到栈中  
+13.	        while (p)  
+14.	        {  
+15.	            s.push(p);  
+16.	            p = p->lchild;  
+17.	        }  
+18.	        //当p为空时，说明已经到达左子树最下边，这时需要出栈了  
+19.	        if (!s.empty())  
+20.	        {  
+21.	            p = s.top();  
+22.	            s.pop();  
+23.	            cout << setw(4) << p->data;  
+24.	            //进入右子树，开始新的一轮左子树遍历(这是递归的自我实现)  
+25.	            p = p->rchild;  
+26.	        }  
+27.	    }  
+28.	}  
+前序遍历：
+•  void PreOrderWithoutRecursion1(BTNode* root)  
+•  {  
+•      if (root == NULL)  
+•          return;  
+•      BTNode* p = root;  
+•      stack<BTNode*> s;  
+•      while (!s.empty() || p)  
+•      {  
+•          //边遍历边打印，并存入栈中，以后需要借助这些根节点(不要怀疑这种说法哦)进入右子树  
+•          while (p)  
+•          {  
+•              cout << setw(4) << p->data;  
+•              s.push(p);  
+•              p = p->lchild;  
+•          }  
+•          //当p为空时，说明根和左子树都遍历完了，该进入右子树了  
+•          if (!s.empty())  
+•          {  
+•              p = s.top();  
+•              s.pop();  
+•              p = p->rchild;  
+•          }  
+•      }  
+•      cout << endl;  
+•  } 
+后序遍历：
+•  void PostOrderWithoutRecursion(BTNode* root)  
+•  {  
+•      if (root == NULL)  
+•          return;  
+•      stack<BTNode*> s;  
+•      //pCur:当前访问节点，pLastVisit:上次访问节点  
+•      BTNode* pCur, *pLastVisit;  
+•      pCur = root;  
+•      pLastVisit = NULL;  
+•      //先把pCur移动到左子树最下边  
+•      while (pCur)  
+•      {  
+•          s.push(pCur);  
+•          pCur = pCur->lchild;  
+•      }  
+•      while (!s.empty())  
+•      {  
+•          //走到这里，pCur都是空，并已经遍历到左子树底端(看成扩充二叉树，则空，亦是某棵树的左孩子)  
+•          pCur = s.top();  
+•          s.pop();  
+•          //一个根节点被访问的前提是：无右子树或右子树已被访问过  
+•          if (pCur->rchild == NULL || pCur->rchild == pLastVisit)  
+•          {  
+•              cout << setw(4) << pCur->data;  
+•              //修改最近被访问的节点  
+•              pLastVisit = pCur;  
+•          }  
+•          /*这里的else语句可换成带条件的else if: 
+•          else if (pCur->lchild == pLastVisit)//若左子树刚被访问过，则需先进入右子树(根节点需再次入栈) 
+•          因为：上面的条件没通过就一定是下面的条件满足。仔细想想！ 
+•          */  
+•          else  
+•          {  
+•              //根节点再次入栈  
+•              s.push(pCur);  
+•              //进入右子树，且可肯定右子树一定不为空  
+•              pCur = pCur->rchild;  
+•              while (pCur)  
+•              {  
+•                  s.push(pCur);  
+•                  pCur = pCur->lchild;  
+•              }  
+•          }  
+•      }  
+•      cout << endl;  
+•  }  
+
+
+vector<int> postOrder(TreeNode *root)
+{
+    vector<int> res;
+    if(root == NULL) return res;
+
+    TreeNode *p = root;
+    stack<TreeNode *> sta;
+    TreeNode *last = root;
+    sta.push(p);
+    while (!sta.empty())
+    {
+        p = sta.top();
+        if( (p->left == NULL && p->right == NULL) || (p->right == NULL && last == p->left) || (last == p->right) )
+        {
+            res.push_back(p->val);
+            last = p;
+            sta.pop();
+        }
+        else 
+        {
+            if(p->right)
+                sta.push(p->right);
+            if(p->left)
+                sta.push(p->left);
+        }
+
+    }
+
+
+    return res;
+}
+
