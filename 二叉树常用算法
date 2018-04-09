@@ -10,6 +10,7 @@
 4.	        return 0;  
 5.	    return GetNodeNum(pRoot->m_pLeft) + GetNodeNum(pRoot->m_pRight) + 1;  
 6.	}  
+
 2. 求二叉树的深度
 递归解法：
 （1）如果二叉树为空，二叉树的深度为0
@@ -24,6 +25,7 @@
 6.	    int depthRight = GetDepth(pRoot->m_pRight);  
 7.	    return depthLeft > depthRight ? (depthLeft + 1) : (depthRight + 1);   
 8.	}  
+
 3. 前序遍历，中序遍历，后序遍历
 前序遍历递归解法：
 （1）如果二叉树为空，空操作
@@ -64,6 +66,7 @@
 6.	    PostOrderTraverse(pRoot->m_pRight); // 后序遍历右子树  
 7.	    Visit(pRoot); // 访问根节点  
 8.	}  
+
 4.分层遍历二叉树（按层次从上往下，从左往右）
 相当于广度优先搜索，使用队列实现。队列初始化，将根节点压入队列。当队列不为空，进行如下操作：弹出一个节点，访问，若左子节点或右子节点不为空，将其压入队列。
 [cpp] view plaincopy
@@ -85,6 +88,7 @@
 16.	    }  
 17.	    return;  
 18.	}  
+
 5. 将二叉查找树变为有序的双向链表 
 要求不能创建新节点，只调整指针。
 递归解法：
@@ -144,7 +148,8 @@
 46.	    }  
 47.	  
 48.	    return;  
-49.	}  
+49.	} 
+
 6. 求二叉树第K层的节点个数
 递归解法：
 （1）如果二叉树为空或者k<1返回0
@@ -162,6 +167,7 @@
 8.	    int numRight = GetNodeNumKthLevel(pRoot->m_pRight, k-1); // 右子树中k-1层的节点个数  
 9.	    return (numLeft + numRight);  
 10.	}  
+
 7. 求二叉树中叶子节点的个数
 递归解法：
 （1）如果二叉树为空，返回0
@@ -179,6 +185,7 @@
 8.	    int numRight = GetLeafNodeNum(pRoot->m_pRight); // 右子树中叶节点的个数  
 9.	    return (numLeft + numRight);  
 10.	}  
+
 8. 判断两棵二叉树是否结构相同
 不考虑数据内容。结构相同意味着对应的左子树和对应的右子树都结构相同。
 递归解法：
@@ -196,7 +203,8 @@
 7.	    bool resultLeft = StructureCmp(pRoot1->m_pLeft, pRoot2->m_pLeft); // 比较对应左子树   
 8.	    bool resultRight = StructureCmp(pRoot1->m_pRight, pRoot2->m_pRight); // 比较对应右子树  
 9.	    return (resultLeft && resultRight);  
-10.	}   
+10.	} 
+
 9. 判断二叉树是不是平衡二叉树
 递归解法：
 （1）如果二叉树为空，返回真
@@ -225,6 +233,7 @@
 20.	        return false;  
 21.	    }  
 22.	}  
+
 10. 求二叉树的镜像
 递归解法：
 （1）如果二叉树为空，返回空
@@ -241,7 +250,8 @@
 8.	    pRoot->m_pLeft = pRight;  
 9.	    pRoot->m_pRight = pLeft;  
 10.	    return pRoot;  
-11.	}  
+11.	} 
+
 11. 求二叉树中两个节点的最低公共祖先节点
 递归解法：
 （1）如果两个节点分别在根节点的左子树和右子树，则返回根节点
@@ -332,6 +342,7 @@
 43.	}  
 
 在上述算法的基础上稍加变化即可求二叉树中任意两个节点的距离了。
+
 12. 求二叉树中节点的最大距离
 即二叉树中相距最远的两个节点之间的距离。
 递归解法：
@@ -373,6 +384,7 @@
 32.	    }  
 33.	    return max(max(maxDistLeft, maxDistRight), maxLeft+maxRight);  
 34.	}  
+
 13. 由前序遍历序列和中序遍历序列重建二叉树
 二叉树前序遍历序列中，第一个元素总是树的根节点的值。中序遍历序列中，左子树的节点的值位于根节点的值的左边，右子树的节点的值位
 于根节点的值的右边。
@@ -415,6 +427,7 @@
 32.	    return pRoot;  
 33.	}  
 同样，有中序遍历序列和后序遍历序列，类似的方法可重建二叉树，但前序遍历序列和后序遍历序列不同恢复一棵二叉树，证明略。
+
 14.判断二叉树是不是完全二叉树
 若设二叉树的深度为h，除第 h 层外，其它各层 (1～h-1) 的结点数都达到最大个数，第 h 层所有的结点都连续集中在最左边，这就是完全
 二叉树。
