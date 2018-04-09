@@ -1,0 +1,6 @@
+5种I/O模型：
+● 阻塞式I/O
+● 非阻塞式I/O
+● I/O复用（select 和 poll）
+● 信号驱动式I/O（SIGIO）
+● 异步I/O(POSIX的aio_系列函数)
