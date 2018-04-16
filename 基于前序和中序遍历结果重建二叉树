@@ -1,0 +1,53 @@
+
+struct BinaryTreeNode{
+  int value;
+  BinaryTreeNode* pLeft;
+  BinaryTreeNode* pRight;
+};
+
+BinaryTreeNode * ConstructBinaryTree(int* pPreOrder, int* pInOrder, int length)
+{
+  if(pPreOrder==NULL||pInOrder==NULL||length<=0)
+    return NULL;
+   
+  ConstructBinartyTreeCore(pPreOrder,pPreOrder+length-1,pInOder,pInorder+length-1);
+}
+
+BinaryTreeNode* ConstructBinaryTreeNodeCore(int* startPreOrder, int* endPreOrder, int* startInOrder, int* endInOrder)
+{
+  int rootValue=startPreOrder[0];
+  BinaryTreeNode* root= new BinaryTreeNode();
+  root->value=rootvalue;
+  root->pLeft=root->pRight=NULL;
+  
+  if(startPreOrder==endPreOrder){
+    if(startInOrder==endInOrder && *startPreOrder==*startInOrder){
+      return root;
+    else{
+      thorw new std::exception("The data is invalid.");
+    }
+   }
+   
+   int* roorInOrder=startInOrder;
+   while(*rootInOrder!=rootValue && rootInOrder<endInOrder)
+    rootInOrder++;
+   
+   if(rootInOrder==endInOrder && rootInOrder!=rootValue){
+      throw new std::exception("Invalid input!");
+   }
+   
+   int leftLength=rootInorder-startPreInorder;
+   if(leftLength>0){
+    root->pLeft=ConstructBinaryTreeNodeCore(startPreOrder+1,startPreorder+leftgth,startInorder,startInOrder+leftgth);
+   }
+   
+   if(leftgth<endInOrder-startInOrder){
+    root->pRight=ConstructBinaryTreeNode(startPreOrder+1+leftgth,endPreOrder,startInOrder+leftgth+1,endInOrder);
+   }
+   
+   return root;
+   }
+  }
+  
+  
+}
